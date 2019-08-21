@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "LineSat",
+  "name": "Application d'administration d'agence LineSat",
   "icons": [
     {
       "src": "favicon.ico",
