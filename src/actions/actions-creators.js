@@ -1,5 +1,41 @@
 
-import { FETCH_CUSTOMERS, FETCH_BOUQUETS, SET_CUSTOMERS, SET_BOUQUETS, FETCH_ACCOUNTS, SET_ACCOUNTS, TRY_AUTH, SET_CONNECTED_USER, SET_CURRENT_AGENCY, SET_REQUIRE_USER_CREDENTIALS, CREATE_CUSTOMER_ACCOUNT, CUSTOMER_ACCOUNT_CREATED, UNFREEZE_CUSTOMER_ACCOUNT, FREEZE_CUSTOMER_ACCOUNT, DEBIT_CUSTOMER_ACCOUNT, CREDIT_CUSTOMER_ACCOUNT, FETCH_USERS, SET_USERS, CREATE_USER_ACCOUNT, DISCONNECT_USER, USER_DISCONNECTED, FETCH_SUBSCRIPTIONS, SET_SUBSCRIPTIONS, SET_SUBSCRIPTION_ONGOING, SET_SUBSCRIPTION_DONE, SET_SUBSCRIPTION_ABORTED, SET_GENERAL_MESSAGE, CREDIT_USER, DISCREDIT_USER, FILTER_SUBSCRIPTIONS } from './actions-types';
+import { SET_CUSTOMERS, SET_BOUQUETS, SET_ACCOUNTS, SET_CONNECTED_USER, SET_CURRENT_AGENCY, SET_REQUIRE_USER_CREDENTIALS, SET_USER, SET_SUBSCRIPTIONS, SET_GENERAL_MESSAGE, FILTER_SUBSCRIPTIONS, SEARCH_BOUQUET, SEARCH_ACCOUNT, SEARCH_SUB, SET_USERS, SEARCH_USER, SET_AGENCY_ACCOUNT, SET_AGENCY_ACCOUNT_ACTIVITY } from './actions-types';
+
+export function searchInBouquets(term=''){
+    return {
+        type:SEARCH_BOUQUET,
+        payload:{
+            term:term
+        }
+    }
+}
+
+export function searchInAccounts(term=''){
+    return {
+        type:SEARCH_ACCOUNT,
+        payload:{
+            term:term
+        }
+    }
+}
+
+export function searchInSubs(term=''){
+    return {
+        type:SEARCH_SUB,
+        payload:{
+            term:term
+        }
+    }
+}
+
+export function searchInUsers(term=''){
+    return {
+        type:SEARCH_USER,
+        payload:{
+            term:term
+        }
+    }
+}
 
 export function setGeneralMessage(message='',type=''){
     return {
@@ -7,15 +43,6 @@ export function setGeneralMessage(message='',type=''){
         payload:{
             message:message,
             type:type
-        }
-    }
-}
-
-export function tryAuth(cred={username:'',password:''}){
-    return {
-        type:TRY_AUTH,
-        payload:{
-            credentials:cred
         }
     }
 }
@@ -47,29 +74,20 @@ export function setCurrentAgency(agency={}){
     }
 }
 
-export function setSubscriptionOngoing(subID){
+export function setAgencyAccount(account={}){
     return {
-        type:SET_SUBSCRIPTION_ONGOING,
+        type: SET_AGENCY_ACCOUNT,
         payload:{
-            id:subID
+            account:account
         }
     }
 }
 
-export function setSubscriptionDone(subID){
+export function setAgencyAccountActivity(activities=[]){
     return {
-        type:SET_SUBSCRIPTION_DONE,
+        type: SET_AGENCY_ACCOUNT_ACTIVITY,
         payload:{
-            id:subID
-        }
-    }
-}
-
-export function setSubscriptionAborted(subID){
-    return {
-        type:SET_SUBSCRIPTION_ABORTED,
-        payload:{
-            id:subID
+            activities:activities
         }
     }
 }
@@ -79,93 +97,6 @@ export function setSubscriptions(subs){
         type:SET_SUBSCRIPTIONS,
         payload:{
             list:subs
-        }
-    }
-}
-
-export function fetchUsers(){
-    return {
-        type:FETCH_USERS
-    }
-}
-
-export function creditUser(uid){
-    return {
-        type:CREDIT_USER,
-        payload:{
-            uid:uid
-        }
-    }
-}
-
-export function discreditUser(uid){
-    return {
-        type:DISCREDIT_USER,
-        payload:{
-            uid:uid
-        }
-    }
-}
-
-
-export function fetchCustomers(){
-    return {
-        type:FETCH_CUSTOMERS
-    }
-}
-
-export function fetchSubscriptions(){
-    return {
-        type:FETCH_SUBSCRIPTIONS
-    }
-}
-
-export function fetchBouquets(){
-    return {
-        type:FETCH_BOUQUETS
-    }
-}
-
-export function fetchAccounts(){
-    return {
-        type:FETCH_ACCOUNTS
-    }
-}
-
-export function  debitCustomerAccount({accountId,amount}){
-    return {
-        type:DEBIT_CUSTOMER_ACCOUNT,
-        payload:{
-            account:accountId,
-            amount:amount
-        }
-    }
-}
-
-export function creditCustomerAccount({accountId,amount}){
-    return {
-        type:CREDIT_CUSTOMER_ACCOUNT,
-        payload:{
-            account:accountId,
-            amount:amount
-        }
-    }
-}
-
-export function freezeCustomerAccount(accountid){
-    return {
-        type:FREEZE_CUSTOMER_ACCOUNT,
-        payload:{
-            account:accountid
-        }
-    }
-}
-
-export function unFreezeCustomerAccount(accountid){
-    return {
-        type:UNFREEZE_CUSTOMER_ACCOUNT,
-        payload:{
-            account:accountid
         }
     }
 }
@@ -203,44 +134,6 @@ export function setAccountsList(list=[]){
         payload:{
             list:list
         }
-    }
-}
-
-
-export function createCustomerAccount(account={}){
-    return {
-        type:CREATE_CUSTOMER_ACCOUNT,
-        payload:{
-            account:account
-        }
-    }
-}
-
-export function createUserAccount(account={}){
-    return {
-        type:CREATE_USER_ACCOUNT,
-        payload:{
-            account:account
-        }
-    }
-}
-
-export function customerAccountCreated(){
-    return {
-        type:CUSTOMER_ACCOUNT_CREATED
-    }
-}
-
-
-export function disconnectedUser(){
-    return {
-        type:DISCONNECT_USER
-    }
-}
-
-export function dispatchUserDisconnected(){
-    return {
-        type:USER_DISCONNECTED
     }
 }
 

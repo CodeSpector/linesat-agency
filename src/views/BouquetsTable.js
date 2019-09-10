@@ -4,9 +4,17 @@ import { connect } from 'react-redux';
 import {BOUQUET_STATE_ACTIVE,BOUQUET_STATE_LOCKED} from '../constants';
 import {Typography,Table, TableHead, TableRow, TableCell, TableBody} from '@material-ui/core';
 
+function search(term='', list=[]){
+    if(!term) return list;
+    return list.filter((idx)=>{return idx.label.toLowerCase() === term.toLowerCase() || idx.label.toLowerCase().includes(term.toLowerCase())});
+}
+
 function mapStateToProps(state){
+    let bouquets ={...state.bouquets};
+    bouquets.list=search(state.bouquets.search.term,state.bouquets.list);
+    console.log(bouquets);
     return {
-        bouquets:state.bouquets
+        bouquets:bouquets
     }
 }
 
@@ -29,19 +37,6 @@ function BouquetsTable(props){
     return (
         <Table>
             <TableHead>
-                <TableRow>
-                    <TableCell colSpan={7}>
-                        <div style={{
-                            color:"rgba(0,0,0,87%)",
-                                display:"flex",
-                                flexDirection:"row",
-                                alignItems:"center",
-                                justifyContent:"space-between"
-                        }}>
-                            <Typography variant="h6">Bouquets</Typography>
-                        </div>
-                    </TableCell>
-                </TableRow>
                 <TableRow>
                     <TableCell>Designation</TableCell>
                     <TableCell>Prix</TableCell>

@@ -1,0 +1,14 @@
+
+
+.bar_title{
+    flex-grow: 1
+}
+
+.bar_search{
+    padding: 0px 12px;
+    margin: 0px 8px;
+}
+
+.bar_search_bar{
+    color:white;
+}

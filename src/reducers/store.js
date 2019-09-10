@@ -1,16 +1,12 @@
 import {createStore, applyMiddleware } from 'redux';
+import Thunk from 'redux-thunk';
+
 import rootReducer from './reducers';
-import * as mws from '../middlewares/middlewares';
 
 const rootStore = createStore(
     rootReducer,
     applyMiddleware(
-        mws.userWare,
-        mws.usersWare,
-        mws.customerWare,
-        mws.bouquetWare,
-        mws.accountWare,
-        mws.subscriptionsWare
+       Thunk
     ));
     
 window.agencyStore=rootStore;

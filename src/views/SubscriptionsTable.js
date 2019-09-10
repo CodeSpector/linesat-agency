@@ -1,12 +1,12 @@
 import React,{useState} from 'react';
 import { connect } from 'react-redux';
-import {Typography,Table, TableHead, TableRow, TableCell, Button, TableBody, Tab, IconButton, MenuItem, Menu, Chip } from '@material-ui/core';
+import {Typography,Table, TableHead, TableRow, TableCell, Button, TableBody, Tab, IconButton, MenuItem, Menu, Chip, TableSortLabel } from '@material-ui/core';
 import { AddOutlined, MoreHorizOutlined, FilterList } from '@material-ui/icons';
 import { subscription_state } from '../constants';
-import { setSubscriptionOngoing, setSubscriptionDone, setSubscriptionAborted, setSubscriptionFilter } from '../actions/actions-creators';
+import { setSubscriptionFilter } from '../actions/actions-creators';
 import { orange, lightBlue, green, red } from '@material-ui/core/colors';
 import { SUBS_FILTER } from '../actions/actions-types';
-
+import { markSubscriptionAborted, markSubscriptionOngoing, markSubscriptionDone } from '../actions/subs_actions';
 
 function applyFilter(filter='',list=[]){
     switch(filter){
@@ -46,9 +46,9 @@ const mapStateToProps=state=>{
 
 const mapDispatchToProps=dispatch=>{
     return {
-        setAborted:(id)=>dispatch(setSubscriptionAborted(id)),
-        setOnGoing:(id)=>dispatch(setSubscriptionOngoing(id)),
-        setDone:(id)=>dispatch(setSubscriptionDone(id)),
+        setAborted:(id)=>dispatch(markSubscriptionAborted(id)),
+        setOnGoing:(id)=>dispatch(markSubscriptionOngoing(id)),
+        setDone:(id)=>dispatch(markSubscriptionDone(id)),
         setFilter:(filter='')=> dispatch(setSubscriptionFilter(filter))
     }
 }
@@ -155,34 +155,17 @@ function SubscriptionsTable(props){
     function handleClose(){
         setAnchor(null);
     }
+    const filter =<Menu open={Boolean(menuAnchor)} anchorEl={menuAnchor} onClose={handleClose}>
+    <MenuItem onClick={()=>props.setFilter(SUBS_FILTER.NONE)}>Aucun</MenuItem>
+        <MenuItem onClick={()=>props.setFilter(SUBS_FILTER.CONFIRMED)}>Souscription confirmée</MenuItem>
+        <MenuItem onClick={()=>props.setFilter(SUBS_FILTER.ONGOING)}>Souscription en cours</MenuItem>
+        <MenuItem onClick={()=>props.setFilter(SUBS_FILTER.WAITING)}>Souscription en attente</MenuItem>
+        <MenuItem onClick={()=>props.setFilter(SUBS_FILTER.CANCELLED)}>Souscription annulée</MenuItem>
+    </Menu>
 
     return (
         <Table>
             <TableHead>
-                <TableRow>
-                    <TableCell colSpan={9}>
-                        <div style={{
-                            color:"rgba(0,0,0,87%)",
-                            display:"flex",
-                            flexDirection:"row",
-                            alignItems:"center",
-                            justifyContent:"space-between"
-                        }}>
-                            <Typography variant="h6">Abonnements</Typography>
-                            <Button onClick={handleOpen}>
-                                <FilterList/>
-                                Filter
-                            </Button>
-                            <Menu open={Boolean(menuAnchor)} anchorEl={menuAnchor} onClose={handleClose}>
-                                <MenuItem onClick={()=>props.setFilter(SUBS_FILTER.NONE)}>Aucun</MenuItem>
-                                <MenuItem onClick={()=>props.setFilter(SUBS_FILTER.CONFIRMED)}>Souscription confirmée</MenuItem>
-                                <MenuItem onClick={()=>props.setFilter(SUBS_FILTER.ONGOING)}>Souscription en cours</MenuItem>
-                                <MenuItem onClick={()=>props.setFilter(SUBS_FILTER.WAITING)}>Souscription en attente</MenuItem>
-                                <MenuItem onClick={()=>props.setFilter(SUBS_FILTER.CANCELLED)}>Souscription annulée</MenuItem>
-                            </Menu>
-                        </div>
-                    </TableCell>
-                </TableRow>
                 <TableRow>
                     <TableCell colSpan={2}>Client</TableCell>
                     <TableCell colSpan={2}>Bouquet</TableCell>
@@ -190,14 +173,54 @@ function SubscriptionsTable(props){
                     <TableCell rowSpan={2}>Actions</TableCell>
                 </TableRow>
                 <TableRow>
-                    <TableCell>Prénom</TableCell>
-                    <TableCell>Nom</TableCell>
-                    <TableCell>Désignation</TableCell>
-                    <TableCell>Prix</TableCell>
-                    <TableCell>Durée</TableCell>
-                    <TableCell>Carte</TableCell>
-                    <TableCell>Date d'initiation</TableCell>
-                    <TableCell>Etat</TableCell>
+                    <TableCell>
+                        <TableSortLabel
+                            active={false}>
+                            Prénom
+                        </TableSortLabel>
+                    </TableCell>
+                    <TableCell>
+                        <TableSortLabel
+                            active={false}>
+                            Nom
+                        </TableSortLabel>
+                    </TableCell>
+                    <TableCell>
+                        <TableSortLabel
+                            active={false}>
+                            Désignation
+                        </TableSortLabel>
+                    </TableCell>
+                    <TableCell>
+                        <TableSortLabel
+                            active={true}>
+                            Prix
+                        </TableSortLabel>
+                    </TableCell>
+                    <TableCell>
+                        <TableSortLabel
+                            active={true}>
+                            Durée
+                        </TableSortLabel>
+                    </TableCell>
+                    <TableCell>
+                        <TableSortLabel
+                            active={true}>
+                            Date d'initiation
+                        </TableSortLabel>
+                    </TableCell>
+                    <TableCell>
+                        <TableSortLabel
+                            active={true}>
+                            Carte
+                        </TableSortLabel>
+                    </TableCell>
+                    <TableCell>
+                        <TableSortLabel
+                            active={true}>
+                            Etat
+                        </TableSortLabel>
+                    </TableCell>
                 </TableRow>
             </TableHead>
             <TableBody>

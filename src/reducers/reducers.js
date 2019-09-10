@@ -1,5 +1,4 @@
-import { SET_CUSTOMERS, SET_BOUQUETS, SET_ACCOUNTS, SET_CURRENT_AGENCY, SET_CONNECTED_USER, SET_REQUIRE_USER_CREDENTIALS, SET_USERS, SET_SUBSCRIPTIONS, SET_GENERAL_MESSAGE, FILTER_SUBSCRIPTIONS } from '../actions/actions-types';
-import { ACCOUNT_TYPE_DEFAULT } from '../constants';
+import { SET_CUSTOMERS, SET_BOUQUETS, SET_ACCOUNTS, SET_CURRENT_AGENCY, SET_CONNECTED_USER, SET_REQUIRE_USER_CREDENTIALS, SET_USERS, SET_SUBSCRIPTIONS, SET_GENERAL_MESSAGE, FILTER_SUBSCRIPTIONS, SEARCH_BOUQUET, SEARCH_ACCOUNT, SEARCH_USER, SET_AGENCY_ACCOUNT, SET_AGENCY_ACCOUNT_ACTIVITY } from '../actions/actions-types';
 
 import { combineReducers } from 'redux';
 
@@ -14,7 +13,21 @@ const initialUser = {
     details:{}
 };
 
-const initialAgencyDetails={}
+const agencyAccount={
+    state:{
+        loading:false,
+        error:false,
+    },
+    detail:{}
+}
+
+const agencyAccountActivity = {
+    state:{
+        loading:false,
+        error:false
+    },
+    list:[]
+}
 
 const initialCustomers={
     state:{
@@ -29,6 +42,9 @@ const initialUsers={
         loading:false,
         error:false
     },
+    search:{
+        term:''
+    },
     list:[]
 }
 
@@ -36,6 +52,9 @@ const initialBouquets={
     state:{
         loading:false,
         error:false
+    },
+    search:{
+        term:''
     },
     list:[]
 }
@@ -54,9 +73,11 @@ const initialAccounts={
         loading:false,
         error:false
     },
+    search:{
+        term:''
+    },
     list:[],
 }
-
 
 export function messageReducer(initialState=initialMessage,action={}){
     if(action.type===SET_GENERAL_MESSAGE){
@@ -80,7 +101,6 @@ export function userReducer(initialState=initialUser,action={}){
             }
             break;
         }
-
         case SET_REQUIRE_USER_CREDENTIALS:{
             user=Object.assign({},initialState,{logged:false,requireCredentials:true,details:{}});
             break;
@@ -89,16 +109,39 @@ export function userReducer(initialState=initialUser,action={}){
     return user;
 };
 
-export function agencyReducer(initialState=initialAgencyDetails,action={}){
+export function agencyReducer(initialState={},action={}){
     switch(action.type){
         case SET_CURRENT_AGENCY :{
-            return Object.assign(initialState,action.payload.agency);
+            return Object.assign({},initialState,action.payload.agency);
         }
         default:{
             return initialState;
         }
     }
 }
+
+export function agencyAccountReducer(initialState=agencyAccount,action={}){
+    switch(action.type){
+        case SET_AGENCY_ACCOUNT:{
+            return {...initialState,state:{loading:false,error:false},detail:action.payload.account};
+        }
+        default:{
+            return initialState;
+        }
+    }
+}
+
+export function agencyAccountActivityReducer(initialState=agencyAccountActivity,action={}){
+    switch(action.type){
+        case SET_AGENCY_ACCOUNT_ACTIVITY:{
+            return {...initialState,state:{loading:false,error:false},list:action.payload.activities};
+        }
+        default:{
+            return initialState;
+        }
+    }
+}
+
 
 export function customerReducer(initialState=initialCustomers,action={}){
     console.log(action);
@@ -122,9 +165,14 @@ export function usersReducer(initialState=initialUsers,action={}){
     let newState=Object.assign({},initialState);
     switch(action.type){
         case SET_USERS:{
+            console.log(action.payload.list);
             newState.state.loading=false;
             newState.state.error=false;
             newState.list=action.payload.list;
+            break;
+        }
+        case SEARCH_USER:{
+            newState.search.term=action.payload.term;
             break;
         }
         default:{
@@ -142,6 +190,13 @@ export function bouquetsReducer(initialState=initialBouquets,action={}){
             newState.state.loading=false;
             newState.state.error=false;
             newState.list=action.payload.list;
+            newState.search.term='';
+            break;
+        }
+        case SEARCH_BOUQUET:{
+            newState.search={
+                term:action.payload.term
+            }
             break;
         }
         default:{
@@ -158,12 +213,15 @@ export function accountsReducer(initialState=initialAccounts,action={}){
         case SET_ACCOUNTS:{
             newState.state.loading=false;
             newState.state.error=false;
-            newState.list=action.payload.list.filter((acc,idx)=>{
-                return acc.type===ACCOUNT_TYPE_DEFAULT
-            });
+            newState.list=action.payload.list;
             break;
         }
-
+        case SEARCH_ACCOUNT:{
+            newState.search={
+                term:action.payload.term
+            }
+            break;
+        }
         default:{
             break;
         }
@@ -197,6 +255,8 @@ export default combineReducers({
     message:messageReducer,
     user:userReducer,
     agency:agencyReducer,
+    agencyAccount:agencyAccountReducer,
+    agencyAccountActivity:agencyAccountActivityReducer,
     customers:customerReducer,
     bouquets:bouquetsReducer,
     accounts:accountsReducer,
