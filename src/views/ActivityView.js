@@ -7,6 +7,7 @@ import ActivityTable from './ActivityTable';
 import {connect} from 'react-redux';
 import { fetchAgencyAccount, fetchAgencyAccountActivity } from '../actions/agency_actions';
 import AgencyAccountView from './AgencyAccountView';
+import NewTransaction from './NewTransaction';
 
 const mapStateToProps = state => {
     return {
@@ -29,12 +30,17 @@ class ActivityView extends React.Component{
         super(props);
         this.state={
             menuOpen:false,
-            accountVisible:false
+            accountVisible:false,
+            newTrans:false
         }
     }
     
     handleMenuClick(){
         this.setState({menuOpen:!this.state.menuOpen});
+    }
+
+    handleTransToggle(){
+        this.setState({newTrans:!this.state.newTrans});
     }
 
     componentWillMount(){
@@ -72,7 +78,7 @@ class ActivityView extends React.Component{
                         <AccountBalance color="inherit" />
                         Compte
                     </Button>
-                    <Button variant="text" color='inherit' onClick={()=>this.toggleAccountVisibility()}>
+                    <Button variant="text" color='inherit' onClick={()=>this.handleTransToggle()}>
                         <AddOutlined color="inherit" />
                         Nouveau
                     </Button>
@@ -99,6 +105,7 @@ class ActivityView extends React.Component{
                     <Button variant="contained" color="primary" onClick={()=>this.toggleAccountVisibility()}>Fermer</Button>
                 </DialogActions>
             </Dialog>
+            <NewTransaction open={this.state.newTrans} onClose={()=>this.handleTransToggle()}/>
         </Grid>);
     }
 }
